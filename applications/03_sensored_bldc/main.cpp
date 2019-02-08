@@ -45,6 +45,7 @@ extern "C"
 
 #include "strmap.hpp"
 #include "usb_print.hpp"
+#include "hall.hpp"
 #include "bldc.hpp"
 
 
@@ -55,6 +56,13 @@ extern "C"
 #define GPIO_M_P2 NRF_GPIO_PIN_MAP(0,9)
 #define GPIO_M_P3 NRF_GPIO_PIN_MAP(1,0)
 #define GPIO_M_EN NRF_GPIO_PIN_MAP(0,24)
+
+#define GPIO_M_Hall1    NRF_GPIO_PIN_MAP(0,2)
+#define GPIO_M_Hall2    NRF_GPIO_PIN_MAP(0,29)
+#define GPIO_M_Hall3    NRF_GPIO_PIN_MAP(0,31)
+
+
+hall_sensors_c hall;
 
 bldc_c motor(PWM_INSTANCE,GPIO_M_P1,GPIO_M_P2,GPIO_M_P3);
 
@@ -128,7 +136,7 @@ int main(void)
     usb.printf("%u/reset>1\r\n");//will be lost if port is closed
     rtc_config(app_rtc_handler);
 
-
+    hall.init(0,5,7);
     // ------------------------- Start Events ------------------------- 
     uint32_t count = 0;
     while(true)
@@ -138,6 +146,11 @@ int main(void)
         if((count % 500) == 0)
         {
             usb.printf("%u/motor>absolute_steps:%0.3f\r\n",id,motor.absolute_steps);
+        }
+        if((count % 100) == 0)
+        {
+            usb.printf("%u/hall>c1:%0.3f;c2:%0.3f;c3:%0.3f\r\n",id,hall.v1,hall.v2,hall.v3);
+            hall.convert();
         }
         count++;
     }

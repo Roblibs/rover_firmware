@@ -18,6 +18,7 @@ $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
 SRC_FILES += \
   ./main.cpp \
   $(PROJ_DIR)/drivers/bldc.cpp \
+  $(PROJ_DIR)/drivers/hall.cpp \
   $(PROJ_DIR)/drivers/clocks.c \
   $(PROJ_DIR)/drivers/mesh.c \
   $(PROJ_DIR)/drivers/app_ser.c \
