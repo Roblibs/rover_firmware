@@ -63,7 +63,8 @@ extern "C"
 
 #define GPIO_Debug_ADC    NRF_GPIO_PIN_MAP(1,10)
 
-hall_sensors_c hall;
+
+hall_sensors_c hall(0,5,7,0.041);//AIN0,AIN5,AIN7, hall_sensors_MAX_amplitude
 
 bldc_c motor(PWM_INSTANCE,GPIO_M_P1,GPIO_M_P2,GPIO_M_P3);
 
@@ -139,7 +140,7 @@ int main(void)
     usb.printf("%u/reset>1\r\n");//will be lost if port is closed
     rtc_config(app_rtc_handler);
 
-    hall.init(0,5,7,0.041);
+    hall.start();
     // ------------------------- Start Events ------------------------- 
     uint32_t count = 0;
     while(true)

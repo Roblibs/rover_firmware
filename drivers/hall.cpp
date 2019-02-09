@@ -33,14 +33,17 @@ void saadc_event_handler(nrfx_saadc_evt_t const * p_evt)
     }
 }
 
-hall_sensors_c::hall_sensors_c()
+hall_sensors_c::hall_sensors_c(uint8_t c1, uint8_t c2, uint8_t c3,float v_amplitude)
 {
     p_sensors = this;
+    channel1 = c1;
+    channel2 = c2;
+    channel3 = c3;
+    amplitude = v_amplitude;
 }
 
-void hall_sensors_c::init(uint8_t c1, uint8_t c2, uint8_t c3,float v_amplitude)
+void hall_sensors_c::start()
 {
-    amplitude = v_amplitude;
     nrfx_saadc_config_t init_config = {
         NRF_SAADC_RESOLUTION_12BIT,
         NRF_SAADC_OVERSAMPLE_8X,
@@ -57,19 +60,19 @@ void hall_sensors_c::init(uint8_t c1, uint8_t c2, uint8_t c3,float v_amplitude)
         NRF_SAADC_REFERENCE_VDD4,
         NRF_SAADC_ACQTIME_40US,
         NRF_SAADC_MODE_SINGLE_ENDED,
-        NRF_SAADC_BURST_ENABLED,
-        NRF_SAADC_INPUT_DISABLED,
+        NRF_SAADC_BURST_ENABLED,                    //required tofor auto - oversampling
+        NRF_SAADC_INPUT_DISABLED,   
         NRF_SAADC_INPUT_DISABLED
     };
 
-    chan_config.pin_p = an_chan_map[c1];
-    nrfx_saadc_channel_init(c1,&chan_config);
+    chan_config.pin_p = an_chan_map[channel1];
+    nrfx_saadc_channel_init(channel1,&chan_config);
 
-    chan_config.pin_p = an_chan_map[c2];
-    nrfx_saadc_channel_init(c2,&chan_config);
+    chan_config.pin_p = an_chan_map[channel2];
+    nrfx_saadc_channel_init(channel2,&chan_config);
 
-    chan_config.pin_p = an_chan_map[c3];
-    nrfx_saadc_channel_init(c3,&chan_config);
+    chan_config.pin_p = an_chan_map[channel3];
+    nrfx_saadc_channel_init(channel3,&chan_config);
 
 }
 
