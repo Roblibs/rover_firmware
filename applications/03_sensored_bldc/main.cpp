@@ -61,6 +61,7 @@ extern "C"
 #define GPIO_M_Hall2    NRF_GPIO_PIN_MAP(0,29)
 #define GPIO_M_Hall3    NRF_GPIO_PIN_MAP(0,31)
 
+#define GPIO_Debug_ADC    NRF_GPIO_PIN_MAP(1,10)
 
 hall_sensors_c hall;
 
@@ -109,9 +110,9 @@ void app_usb_rx_handler(const char*msg,uint8_t size)
  */
 void app_rtc_handler()
 {
-    static uint32_t alive_count = 0;
+    //static uint32_t alive_count = 0;
     led2_green_on();
-    usb.printf("%u/alive>%lu\r\n",id,alive_count++);
+    //usb.printf("%u/alive>%lu\r\n",id,alive_count++);
     led2_green_off();
 }
 
@@ -129,6 +130,8 @@ int main(void)
     blink_green(1000,200);
     blink_blue(1000,200);
 
+    nrf_gpio_cfg_output(GPIO_Debug_ADC);
+
     nrf_gpio_cfg_output(GPIO_M_EN);
     nrf_gpio_pin_set(GPIO_M_EN);
 
@@ -145,11 +148,12 @@ int main(void)
         nrf_delay_us(1000);
         if((count % 500) == 0)
         {
-            usb.printf("%u/motor>absolute_steps:%0.3f\r\n",id,motor.absolute_steps);
+            //usb.printf("%u/motor>absolute_steps:%0.3f\r\n",id,motor.absolute_steps);
         }
-        if((count % 100) == 0)
+        if((count % 2) == 0)
         {
-            usb.printf("%u/hall>c1:%0.3f;c2:%0.3f;c3:%0.3f\r\n",id,hall.v1,hall.v2,hall.v3);
+            float sum = hall.v1+hall.v2+hall.v3;
+            usb.printf("%u/hall>c1:%0.3f;c2:%0.3f;c3:%0.3f;s:%0.3f\r\n",id,hall.v1,hall.v2,hall.v3,sum);
             hall.convert();
         }
         count++;

@@ -16,6 +16,8 @@ void OnProjectLoad (void) {
   Project.SetHostIF ("USB", "");
   Project.SetTargetIF ("SWD");
   Project.SetTIFSpeed ("4 MHz");
+  Project.SetTraceSource ("SWO");
+  Project.ConfigSWO ("auto", "auto");
   Project.AddSvdFile ("Cortex-M4F.svd");
   Project.AddSvdFile ("C:/Program Files/SEGGER/Ozone V2.50b/Config/Peripherals/nrf52840.svd");
   //

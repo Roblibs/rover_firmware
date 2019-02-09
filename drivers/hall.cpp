@@ -1,8 +1,10 @@
 #include "hall.hpp"
 
-
+#include "nrf_gpio.h"
 
 #include "nrfx_saadc.h"
+
+#define GPIO_Debug_ADC    NRF_GPIO_PIN_MAP(1,10)
 
 nrf_saadc_input_t an_chan_map[8]={NRF_SAADC_INPUT_AIN0,NRF_SAADC_INPUT_AIN1,NRF_SAADC_INPUT_AIN2,NRF_SAADC_INPUT_AIN3,
                                 NRF_SAADC_INPUT_AIN4,NRF_SAADC_INPUT_AIN5,NRF_SAADC_INPUT_AIN6,NRF_SAADC_INPUT_AIN7};
@@ -17,9 +19,11 @@ void saadc_event_handler(nrfx_saadc_evt_t const * p_evt)
     }
     if (p_evt->type == NRFX_SAADC_EVT_DONE)
     {
+        nrf_gpio_pin_clear(GPIO_Debug_ADC);
         p_sensors->v1 = p_sensors->adc_values[0] / 4096.0;// 12 bits
         p_sensors->v2 = p_sensors->adc_values[1] / 4096.0;// 12 bits
         p_sensors->v3 = p_sensors->adc_values[2] / 4096.0;// 12 bits
+        
     }
 }
 
@@ -64,6 +68,7 @@ void hall_sensors_c::init(uint8_t c1, uint8_t c2, uint8_t c3)
 
 void hall_sensors_c::convert()
 {
+    nrf_gpio_pin_set(GPIO_Debug_ADC);
     nrfx_saadc_buffer_convert(adc_values, 3);
     nrfx_saadc_sample();
 }
