@@ -139,7 +139,7 @@ int main(void)
     usb.printf("%u/reset>1\r\n");//will be lost if port is closed
     rtc_config(app_rtc_handler);
 
-    hall.init(0,5,7);
+    hall.init(0,5,7,0.041);
     // ------------------------- Start Events ------------------------- 
     uint32_t count = 0;
     while(true)
@@ -152,8 +152,9 @@ int main(void)
         }
         if((count % 2) == 0)
         {
-            float sum = hall.v1+hall.v2+hall.v3;
-            usb.printf("%u/hall>c1:%0.3f;c2:%0.3f;c3:%0.3f;s:%0.3f\r\n",id,hall.v1,hall.v2,hall.v3,sum);
+            //float sum = hall.v1+hall.v2+hall.v3;
+            //usb.printf("%u/hall>c1:%0.3f;c2:%0.3f;c3:%0.3f;angle:%0.3f;\r\n",id,hall.v1,hall.v2,hall.v3,hall.magnetic_angle);
+            usb.printf("%0.3f\t%0.3f\t%0.3f\t%u\t%0.3f\r\n",hall.v1,hall.v2,hall.v3,hall.phase_section,hall.magnetic_angle);
             hall.convert();
         }
         count++;
