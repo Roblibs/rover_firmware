@@ -20,6 +20,7 @@ SRC_FILES += \
   $(PROJ_DIR)/drivers/bldc.cpp \
   $(PROJ_DIR)/drivers/hall.cpp \
   $(PROJ_DIR)/drivers/ppi.cpp \
+  $(PROJ_DIR)/drivers/compare.cpp \
   $(PROJ_DIR)/drivers/clocks.c \
   $(PROJ_DIR)/drivers/mesh.c \
   $(PROJ_DIR)/drivers/app_ser.c \

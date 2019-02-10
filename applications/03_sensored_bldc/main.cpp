@@ -48,7 +48,7 @@ extern "C"
 #include "ppi.hpp"
 #include "hall.hpp"
 #include "bldc.hpp"
-
+#include "compare.hpp"
 
 
 
@@ -73,6 +73,8 @@ bldc_c motor(PWM_INSTANCE,GPIO_M_P1,GPIO_M_P2,GPIO_M_P3);
 void app_usb_rx_handler(const char*msg,uint8_t size);
 
 usb_c usb(app_usb_rx_handler);
+
+compare_c timer4(4,4000);
 
 uint8_t id = get_this_node_id();
 std::string motor_topic(std::to_string(id) + "/motor_ctl");
@@ -138,12 +140,16 @@ int main(void)
     nrf_gpio_cfg_output(GPIO_M_EN);
     nrf_gpio_pin_set(GPIO_M_EN);
 
-    connect.link(   ppi::event::radio::end,
-                    ppi::task::timer4::compare5);
-
     // ------------------------- Start Init ------------------------- 
     usb.printf("%u/reset>1\r\n");//will be lost if port is closed
     rtc_config(app_rtc_handler);
+
+
+
+    connect.link(   ppi::event::timer4::compare5,
+                    ppi::task::timer4::clear);
+    timer4.start();
+
 
     hall.start();
     // ------------------------- Start Events ------------------------- 

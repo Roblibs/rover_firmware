@@ -20,7 +20,6 @@ namespace ppi
         }
         namespace timer4
         {
-            task_t const compare5 = 0x4001B154;
             task_t const clear = 0x4001B00C;
         }
         namespace radio
@@ -31,6 +30,10 @@ namespace ppi
     {
         namespace timer0
         {
+        }
+        namespace timer4
+        {
+            task_t const compare5 = 0x4001B154;
         }
         namespace radio
         {
