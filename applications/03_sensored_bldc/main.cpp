@@ -45,6 +45,7 @@ extern "C"
 
 #include "strmap.hpp"
 #include "usb_print.hpp"
+#include "ppi.hpp"
 #include "hall.hpp"
 #include "bldc.hpp"
 
@@ -63,6 +64,7 @@ extern "C"
 
 #define GPIO_Debug_ADC    NRF_GPIO_PIN_MAP(1,10)
 
+ppi_c connect;
 
 hall_sensors_c hall(0,5,7,0.041);//AIN0,AIN5,AIN7, hall_sensors_MAX_amplitude
 
@@ -135,6 +137,9 @@ int main(void)
 
     nrf_gpio_cfg_output(GPIO_M_EN);
     nrf_gpio_pin_set(GPIO_M_EN);
+
+    connect.link(   ppi::event::radio::end,
+                    ppi::task::timer4::compare5);
 
     // ------------------------- Start Init ------------------------- 
     usb.printf("%u/reset>1\r\n");//will be lost if port is closed
